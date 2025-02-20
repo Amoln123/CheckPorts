@@ -1,0 +1,41 @@
+mongo:
+  localhost: "127.0.0.1"
+  dockerhost: "host.docker.internal"
+  mongoports:
+    27031: "MongoDB Instance 1"
+    27032: "MongoDB Instance 2"
+    27033: "MongoDB Instance 3"
+    27034: "MongoDB Instance 4"
+    27035: "MongoDB Instance 5"
+    27037: "MongoDB Instance 6"
+
+  servicesports:
+    6001: "GateWayService"
+    6002: "RateLimiterService"
+    6003: "AuthenticationService"
+    6004: "ClientService"
+    6005: "CollaborationService"
+    6006: "LoadService"
+
+  redisinduports:
+    8000: "RateLimiterService ConfigRedis"
+    8001: "AuthenticationService ConfigRedis"
+    8002: "ClientService ConfigRedis"
+    8003: "CollaborationService ConfigRedis"
+    8004: "GateWayService ConfigRedis"
+    8005: "LoadService ConfigRedis"
+
+  redisclusterports:
+    7000: "RateLimiterService RequestRedis Cluster"
+    7001: "RateLimiterService RequestRedis Cluster"
+    7002: "RateLimiterService RequestRedis Cluster"
+    7003: "RateLimiterService RequestRedis Cluster"
+    7004: "RateLimiterService RequestRedis Cluster"
+    7005: "RateLimiterService RequestRedis Cluster"
+
+
+
+
+
+
+
