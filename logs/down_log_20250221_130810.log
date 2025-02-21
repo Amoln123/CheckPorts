@@ -1,5 +1,0 @@
-[2025-02-21 13:08:12] ❌ DOWN GateWayService [Service] on port 6001
-[2025-02-21 13:08:14] ❌ DOWN AuthenticationService [Service] on port 6003
-[2025-02-21 13:08:16] ❌ DOWN ClientService [Service] on port 6004
-[2025-02-21 13:08:18] ❌ DOWN CollaborationService [Service] on port 6005
-[2025-02-21 13:08:20] ❌ DOWN LoadService [Service] on port 6006
