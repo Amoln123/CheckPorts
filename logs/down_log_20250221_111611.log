@@ -1,0 +1,11 @@
+[2025-02-21 11:16:13] ❌ DOWN MongoDB Instance 1 [MongoDB] on port 27031
+[2025-02-21 11:16:15] ❌ DOWN MongoDB Instance 2 [MongoDB] on port 27032
+[2025-02-21 11:16:17] ❌ DOWN MongoDB Instance 3 [MongoDB] on port 27033
+[2025-02-21 11:16:19] ❌ DOWN MongoDB Instance 4 [MongoDB] on port 27034
+[2025-02-21 11:16:21] ❌ DOWN MongoDB Instance 5 [MongoDB] on port 27035
+[2025-02-21 11:16:23] ❌ DOWN MongoDB Instance 6 [MongoDB] on port 27037
+[2025-02-21 11:16:25] ❌ DOWN GateWayService [Service] on port 6001
+[2025-02-21 11:16:27] ❌ DOWN AuthenticationService [Service] on port 6003
+[2025-02-21 11:16:29] ❌ DOWN ClientService [Service] on port 6004
+[2025-02-21 11:16:31] ❌ DOWN CollaborationService [Service] on port 6005
+[2025-02-21 11:16:33] ❌ DOWN LoadService [Service] on port 6006

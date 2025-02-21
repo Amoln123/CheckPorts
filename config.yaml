@@ -33,8 +33,7 @@ mongo:
     7004: "RateLimiterService RequestRedis Cluster"
     7005: "RateLimiterService RequestRedis Cluster"
 
-
-
+logdir : 'logs'
 
 
 

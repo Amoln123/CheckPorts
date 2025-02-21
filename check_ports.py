@@ -9,8 +9,8 @@ def timestamp():
     return datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
 
 # Generate log filename with timestamp
-def get_log_filename():
-    log_dir = "logs"
+def get_log_filename(config):
+    log_dir = config['logdir']
     os.makedirs(log_dir, exist_ok=True)  # Ensure the logs directory exists
     log_time = datetime.now().strftime("%Y%m%d_%H%M%S")
     return os.path.join(log_dir, f"down_log_{log_time}.log")
@@ -54,7 +54,7 @@ if __name__ == "__main__":
       
 
 
-        log_file = get_log_filename()  # Generate a new log file on each check
+        log_file = get_log_filename(config)  # Generate a new log file on each check
 
         print("\n--- Checking Services Status ---")
         check_ports(host, config["mongo"]["mongoports"], "MongoDB", log_file)
