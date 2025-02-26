@@ -2,7 +2,9 @@
 
 log_directory: "logs"
 RateLimiterService:
-  host : "localhost"
+  local_host : "localhost"
+  docker_host : "host.docker.internal"
+
   Mongo_config_data:
     - service: "MongoDB Instance 1"
       category: "MongoDB"
@@ -54,14 +56,16 @@ RateLimiterService:
       port : 6002
 
 GateWayService:
-    host : "localhost"
+    local_host : "localhost"
+    docker_host : "host.docker.internal"
     service_port:
       - service: "GateWayService"
         category: "Main Port"    
         port : 6001
 
 AuthenticationService:
-    host : "localhost"
+    local_host : "localhost"
+    docker_host : "host.docker.internal"
     service_port:
       - service: "AuthenticationService"
         category: "Main Port"      
@@ -73,7 +77,8 @@ AuthenticationService:
         port: 8001
 
 ClientService:
-    host : "localhost"
+    local_host : "localhost"
+    docker_host : "host.docker.internal"
     service_port:
       - service: "ClientService"
         category: "Main Port"
@@ -85,7 +90,8 @@ ClientService:
         port: 8002
 
 CollaborationService:
-    host : "localhost"
+    local_host : "localhost"
+    docker_host : "host.docker.internal"
     service_port:
     - service: "CollaborationService"
       category: "Main Port"    
@@ -97,7 +103,8 @@ CollaborationService:
         port: 8002
 
 LoadService:
-    host : "localhost"
+    local_host : "localhost"
+    docker_host : "host.docker.internal"
     service_port:
     - service: "LoadService"
       category: "Main Port" 

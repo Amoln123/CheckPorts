@@ -63,8 +63,12 @@ def perform_health_check():
         last_health_check = load_yaml_config()  # Reload YAML in case of updates
 
         for servicename, categories in last_health_check.items():
-            if isinstance(categories, dict) and "host" in categories:
-                host = categories["host"]  # Get the specific host for this service
+            if isinstance(categories, dict) and "local_host" in categories:
+                if os.path.exists("/.dockerenv") or os.path.exists("/proc/self/cgroup"):
+                    host = categories["docker_host"]  # Running inside Docker
+                else:
+                    host =categories["local_host"]   # Running locally
+
                 
                 for category, services in categories.items():
                     if isinstance(services, list):  # Only process lists (ignoring 'host')
