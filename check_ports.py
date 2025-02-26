@@ -1,66 +1,89 @@
+import os
 import socket
 import yaml
 import time
-import os
+import logging
 from datetime import datetime
+from fastapi import FastAPI
 
-# Get current timestamp
-def timestamp():
-    return datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+app = FastAPI()
 
-# Generate log filename with timestamp
-def get_log_filename(config):
-    log_dir = config['logdir']
-    os.makedirs(log_dir, exist_ok=True)  # Ensure the logs directory exists
-    log_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return os.path.join(log_dir, f"down_log_{log_time}.log")
 
-# Load YAML config
-def load_config(file="config.yaml"):
-    with open(file, "r", encoding="utf-8") as f:  # Ensure YAML file is read in UTF-8
-        return yaml.safe_load(f)
+# Load service configuration from YAML
+def load_yaml_config():
+    with open("config.yaml", "r") as file:
+        return yaml.safe_load(file)
 
-# Function to check port status and log if down
-def check_ports(host, ports_dict, category, log_file):
-    log_entries = []
+#Extract log directory from YAML
+config = load_yaml_config()
+BASE_LOG_DIR = config.get("log_directory", "logs") 
+
+
+# Get timestamp
+def timestamp(fmt="%Y-%m-%d %H:%M:%S"):
+    return datetime.now().strftime(fmt)
+
+# Create a structured log directory and file
+def get_log_file(service_name, port,file):
+    date_folder = timestamp("%Y-%m-%d")
+    time_stamp = timestamp("%H-%M-%S")
     
-    for port in ports_dict:
-        service_name = ports_dict[port]
+    service_log_dir = os.path.join(BASE_LOG_DIR, service_name, date_folder)
+    os.makedirs(service_log_dir, exist_ok=True)
+    
+    return os.path.join(service_log_dir, f"{port}_{file}_{time_stamp}.log")
+
+# Check if a port is open
+def check_ports(host, services,servicename):
+    for service in services:
+
+        
+        port = service["port"]
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(2)  # Timeout after 2 seconds
             result = s.connect_ex((host, int(port)))  # Ensure port is an integer
-            status = "✅ UP" if result == 0 else "❌ DOWN"
-            log_entry = f"{timestamp()} {status} {service_name} [{category}] on port {port}"
-            print(log_entry)
+            status = "UP" if result == 0 else "DOWN"
+            service["status"] = status
             
-            # If service is DOWN, log the entry
-            if result != 0:
-                log_entries.append(log_entry)
-    
-    # Write to log file if there are any DOWN services
-    if log_entries:
-        with open(log_file, "a", encoding="utf-8") as f:  # Fix: UTF-8 encoding
-            f.write("\n".join(log_entries) + "\n")
 
-if __name__ == "__main__":
-    while True:  # Infinite loop to check every 5 minutes
-        config = load_config()
+            log_message = f"{timestamp()} | Service: {service['service']} | Port: {port} | Status: {status}"
+            print(log_message)  # Optional: Print for real-time debugging
+            file=service['service']
+            
+            # Log the health check status per service
+            if status == "DOWN":
+                log_file = get_log_file(servicename, port,file)
+                with open(log_file, "a") as f:
+                    f.write(log_message + "\n")
 
-        if os.path.exists("/.dockerenv") or os.path.exists("/proc/self/cgroup"):
-            host = config["mongo"]["dockerhost"] # Running inside Docker
-        else:
-            host = config["mongo"]["localhost"] # Running locally 
+# Health check function (Runs every 5 minutes)
+def perform_health_check():
+    global last_health_check
+    while True:
+        last_health_check = load_yaml_config()  # Reload YAML in case of updates
 
-      
+        for servicename, categories in last_health_check.items():
+            if isinstance(categories, dict) and "host" in categories:
+                host = categories["host"]  # Get the specific host for this service
+                
+                for category, services in categories.items():
+                    if isinstance(services, list):  # Only process lists (ignoring 'host')
+                        check_ports(host, services,servicename)
+
+        print(f"\n[{timestamp()}] Health check completed. Next check in 5 minutes...\n")
+        time.sleep(300)  # Wait for 5 minutes
 
 
-        log_file = get_log_filename(config)  # Generate a new log file on each check
 
-        print("\n--- Checking Services Status ---")
-        check_ports(host, config["mongo"]["mongoports"], "MongoDB", log_file)
-        check_ports(host, config["mongo"]["servicesports"], "Service", log_file)
-        check_ports(host, config["mongo"]["redisinduports"], "ConfigRedis", log_file)
-        check_ports(host, config["mongo"]["redisclusterports"], "RequestRedis Cluster", log_file)
 
-        print(f"\n--- Next check in 5 minutes... ---\n")
-        time.sleep(60)  # Wait for 5 minutes (300 seconds)
+# API endpoint to get the latest health check result
+@app.get("/health-check")
+def get_health_status():
+    return last_health_check
+
+# Run health checks in the background when the API starts
+@app.on_event("startup")
+async def startup_event():
+    import threading
+    thread = threading.Thread(target=perform_health_check, daemon=True)
+    thread.start()

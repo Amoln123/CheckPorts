@@ -1,0 +1,23 @@
+# Ignore virtual environments
+venv/
+monitorenvenv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Ignore Git files
+.git
+.gitignore
+
+# Ignore database files
+*.sqlite3
+*.db
+
+# Ignore large datasets or cache
+*.csv
+*.xlsx
+*.json
+media/
+staticfiles/

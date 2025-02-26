@@ -1,7 +1,7 @@
 # Use the official Python image
 FROM python:3.12
 
-# Set the timezone (adjust if needed)
+# Set the timezone
 ENV TZ=Asia/Kolkata
 
 # Install system dependencies for setting timezone
@@ -12,17 +12,14 @@ RUN apt-get update && apt-get install -y tzdata && \
 # Set the working directory
 WORKDIR /app
 
-# Copy the application code to the container
+# Copy the application files
 COPY . .
 
-# Ensure no conflicting yaml.py file exists
-RUN rm -f /app/yaml.py
-
-# Install dependencies from requirements.txt
+# Install required Python packages
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Ensure the script is executable
-RUN chmod +x check_ports.py
+# Expose the required port
+EXPOSE 6021
 
-# Run the script
-CMD ["python", "check_ports.py"]
+# Run the application using uvicorn
+CMD ["uvicorn", "check_ports:app", "--host", "0.0.0.0", "--port", "6021", "--reload"]
