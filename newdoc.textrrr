@@ -1,0 +1,131 @@
+i have python project based on fastapi i was pushed on git then create repository on hub.docker.com the repository was private becose i have paid version of docker when i was pull image on my docker descstop then i was get sorse code i want to dont have permisstion to get source code how to restict or how to secure my code
+
+
+
+
+
+# # Use the official Python image
+# FROM python:3.12
+
+# # Set the timezone
+# ENV TZ=Asia/Kolkata
+
+# # Install system dependencies for setting timezone
+# RUN apt-get update && apt-get install -y tzdata && \
+#     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+#     dpkg-reconfigure -f noninteractive tzdata
+
+# # Set the working directory
+# WORKDIR /app
+
+# # Copy the application files
+# COPY . .
+
+# # Install required Python packages
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Expose the required port
+# EXPOSE 6021
+
+# # Run the application using uvicorn
+# CMD ["uvicorn", "check_ports:app", "--host", "0.0.0.0", "--port", "6021", "--reload"]
+
+
+
+
+
+
+
+
+docker build -t my_secure_app .
+
+docker run -d --name port_checker -v C:\Users\Amol.Choudhari\Desktop\MongoScript\check_all_ports\logs:/app/logs my_secure_app
+
+
+docker cp my_secure_app:/app ./extracted_code
+
+
+
+			a)docker build -t port-checker .
+			b)docker run -d --name port_checker -v C:\Users\Amol.Choudhari\Desktop\MongoScript\check_all_ports\logs:/app/logs port-checker
+			commond run on power shell
+			c)docker run -d --name port_checker -e TZ=Asia/Kolkata -v "$(pwd)/logs:/app/logs" port-checker
+
+
+docker build -t portchecker .
+docker run -d --name port-checker -e TZ=Asia/Kolkata -v "$(pwd)/logs:/app/logs" portchecker
+
+
+docker exec -it port-checker /bin/sh ls -l /app/__pycache__
+=============================================================================
+i have python script i was biled docker image and run by using this commond
+
+docker build -t my_secure_app .
+docker run -d --name port_checker -v C:\Users\Amol.Choudhari\Desktop\MongoScript\check_all_ports\logs:/app/logs my_secure_app
+
+when i extract (docker cp my_secure_app:/app ./extracted_code) commond run grtin source code i want when i run on docker my source code was secure
+
+
+==================
+1)C:\Users\Amol.Choudhari\Desktop\MongoScript\check_all_ports\monitorenv\Scripts\activate
+2)cd C:\Users\Amol.Choudhari\Desktop\git\CheckPorts
+3)pip install --no-cache-dir --force-reinstall fastapi pydantic starlette typing-extensions
+
+
+==============================================
+i have python project based on fastapi i want to crate docker iamge and run container with my sorce code was secure when some one want to get my code framcontainer or image then secure code ,how to secure my source code
+
+this was my yamle file 
+
+
+# # Use the official Python image
+# FROM python:3.12
+
+# # Set the timezone
+# ENV TZ=Asia/Kolkata
+
+# # Install system dependencies for setting timezone
+# RUN apt-get update && apt-get install -y tzdata && \
+#     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+#     dpkg-reconfigure -f noninteractive tzdata
+
+# # Set the working directory
+# WORKDIR /app
+
+# # Copy the application files
+# COPY . .
+
+# # Install required Python packages
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Expose the required port
+# EXPOSE 6021
+
+# # Run the application using uvicorn
+# CMD ["uvicorn", "check_ports:app", "--host", "0.0.0.0", "--port", "6021", "--reload"]
+
+
+# this was my create image and container commond
+
+# docker build -t portchecker .
+# docker run -d --name port-checker -e TZ=Asia/Kolkata -v "$(pwd)/logs:/app/logs" portchecker
+
+
+# give me proper stepby step setup for my code secure 
+
+
+
+# docker build -t portchecker .
+# docker run -d --name port-checker -e TZ=Asia/Kolkata -v "$(pwd)/logs:/app/logs" portchecker
+# docker cp port-checker:/app ./extracted_code
+
+
+CheckPorts/
+│── check_ports.py
+│── requirements.txt
+│── Dockerfile
+│── config.yaml
+
+
+
+docker run -d --name port-checker --security-opt no-new-privileges --read-only -e TZ=Asia/Kolkata -v "$(pwd)/logs:/app/logs" portchecker

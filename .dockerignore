@@ -21,3 +21,6 @@ __pycache__/
 *.json
 media/
 staticfiles/
+
+
+
